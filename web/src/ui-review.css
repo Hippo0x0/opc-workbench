@@ -1,0 +1,61 @@
+/* 保留原有视觉体系，收紧辅助信息并让主要内容更易读。 */
+.research-form textarea{min-height:112px}
+.research-form input:focus-visible,.research-form select:focus-visible,.research-form textarea:focus-visible,
+.settings-section input:focus-visible,.settings-section select:focus-visible,
+.sdlc-form input:focus-visible,.sdlc-form textarea:focus-visible,
+.project-tools input:focus-visible,.project-tools button:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-color:var(--theme-blue-border,#84adff)}
+.advanced-settings{border-top:1px solid var(--line);padding-top:12px}
+.advanced-settings summary{cursor:pointer;color:var(--theme-secondary,#475467);font-weight:600;margin-bottom:12px}
+.advanced-settings label{margin-top:10px}
+.topbar .console-status{display:grid;place-items:center;min-height:36px;padding:7px 10px;border:0;border-radius:8px;color:var(--theme-secondary,#475467);background:var(--theme-subtle-surface,#f2f4f7);transition:background-color 120ms ease,color 120ms ease}
+.topbar .console-status span{padding:0;background:transparent;color:inherit}
+.topbar .runtime-status .runtime-current,.topbar .runtime-status .runtime-check{grid-area:1/1;white-space:nowrap;transition:opacity 100ms ease}
+.topbar .runtime-status .runtime-check{opacity:0}
+.topbar .runtime-status.show-check .runtime-current{opacity:0}
+.topbar .runtime-status.show-check .runtime-check{opacity:1}
+.topbar .console-status:hover,.topbar .console-status:focus-visible{color:var(--theme-blue-text,#175cd3);background:var(--theme-blue-soft,#edf4ff)}
+.topbar .console-status:focus-visible{outline:2px solid var(--theme-blue-border,#84adff);outline-offset:2px}
+.topbar .console-status:disabled{cursor:wait;opacity:1}
+.topbar .runtime-online{color:var(--theme-success-text,#067647);background:var(--theme-success-soft,#ecfdf3)}
+.topbar .runtime-offline{color:var(--theme-error-text,#b42318);background:var(--theme-subtle-surface,#fef3f2)}
+.topbar .runtime-starting{color:var(--theme-warning-text,#b54708);background:var(--theme-warning-soft,#fffaeb)}
+.sidebar-empty{padding:12px 8px;color:var(--theme-muted,#667085);font-size:12px;overflow-wrap:anywhere}
+.sidebar-empty p{margin:0 0 8px}
+.sidebar-empty button{padding:0;text-align:left}
+@media(min-width:901px){.sidebar-collapsed .sidebar-empty{font-size:11px;padding:8px 0;text-align:center}}
+.settings-channel{margin-top:14px;border-top:1px solid var(--line);padding:12px 0 0}
+.settings-channel>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;list-style:none;color:var(--theme-secondary,#344054)}
+.settings-channel>summary::-webkit-details-marker{display:none}
+.settings-channel>summary:after{content:'展开';font-size:12px;color:var(--theme-blue-text,var(--blue))}
+.settings-channel[open]>summary:after{content:'收起'}
+.settings-channel>summary>span{margin-left:auto;font-size:12px}
+.settings-channel>summary:focus-visible{outline:2px solid var(--blue);outline-offset:4px}
+.settings-channel[open]>summary{margin-bottom:16px}
+.settings-channel .settings-row{margin-top:12px}
+.settings-channel p{max-width:68ch}
+.settings-section>.settings-error,.settings-channel>.settings-error{padding:10px 12px;background:var(--theme-subtle-surface,#fef3f2);border-radius:6px}
+.sdlc-page .root-issue{margin-bottom:16px}
+.sdlc-page .root-issue>summary{padding-top:10px;padding-bottom:10px;min-height:48px}
+.sdlc-page .pipeline{margin-bottom:18px}
+.sdlc-page .flow{padding-top:20px;padding-bottom:12px}
+.sdlc-page .root-issue summary b{font-size:12px;padding:2px 5px}
+.markdown-content{white-space:normal;overflow-wrap:anywhere;line-height:1.75}
+.markdown-content>:first-child{margin-top:0}
+.markdown-content>:last-child{margin-bottom:0}
+.markdown-content p{margin:0 0 14px;max-width:80ch}
+.markdown-content h1,.markdown-content h2,.markdown-content h3,.markdown-content h4{line-height:1.4;margin:24px 0 12px;font-weight:700}
+.markdown-content h1{font-size:23px}.markdown-content h2{font-size:20px}.markdown-content h3{font-size:17px}.markdown-content h4{font-size:15px}
+.markdown-content ul,.markdown-content ol{padding-left:24px;margin:12px 0}
+.markdown-content li{margin:5px 0}
+.markdown-content pre{white-space:pre;overflow-x:auto;background:var(--theme-subtle-surface,#f5f7fa);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+.markdown-content :not(pre)>code{background:var(--theme-subtle-surface,#f2f4f7);padding:2px 4px;border-radius:4px}
+.markdown-content blockquote{margin:16px 0;padding:8px 14px;border-left:3px solid var(--theme-blue-border,#84adff);color:var(--theme-secondary,#475467);background:var(--theme-subtle-surface,#f8fafc)}
+.markdown-content table{display:block;max-width:100%;overflow-x:auto;border-collapse:collapse;margin:16px 0}
+.markdown-content td,.markdown-content th{padding:8px 12px;border:1px solid var(--line);text-align:left;vertical-align:top;min-width:5em}
+.markdown-content th{background:var(--theme-subtle-surface,#f8fafc);white-space:nowrap}
+.markdown-content a{text-decoration:underline;text-underline-offset:3px}
+.markdown-content a:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+@media(max-width:700px){.research-form textarea{min-height:112px}.sdlc-page .sdlc-results{padding:16px}.markdown-content h1{font-size:21px}.markdown-content h2{font-size:18px}.markdown-content pre{padding:12px}}
+
+.settings-channel .settings-row>div:first-child:not(.settings-actions){display:none}
+.settings-channel .settings-row{justify-content:flex-end}

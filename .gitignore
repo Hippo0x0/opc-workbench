@@ -1,0 +1,8 @@
+node_modules/
+build/
+web/dist/
+*.tgz
+.opc-workbench/
+.env
+.env.*
+!.env.example

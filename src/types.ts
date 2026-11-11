@@ -1,0 +1,3 @@
+export interface ResearchBudget { maxAgentInvocations?: number; maxWallTimeMinutes?: number; stageTimeoutMinutes?: number; maxConcurrency: number }
+export interface StageTask { protocolVersion?:1; schemaVersion:1; researchId:string;runId:string;stageId:string;attempt:number;agentId:string;frozenInputRef:string;acceptedArtifactRefs:string[];objective:string;constraints:string[];capabilityGrant:import("./agent-protocol.ts").AgentCapability[];budget:Record<string,number> }
+export interface StageResult { schemaVersion:1;stageId:string;attempt:number;agentId:string;status:"OK"|"DEGRADED"|"FAILED"|"CANCELLED";summary:string;reportMarkdown?:string;gaps:Array<{description:string}>;artifacts:Array<Record<string,unknown>>;metrics:Record<string,unknown> }

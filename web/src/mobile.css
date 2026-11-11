@@ -1,0 +1,71 @@
+.project-toggle { display: none; }
+
+@media (max-width: 700px) {
+  html { scrollbar-gutter: auto; }
+  .layout { display: block; min-width: 0; }
+  .sidebar { position: static; height: auto; padding: 0 16px; border-right: 0; border-bottom: 1px solid var(--line); }
+  .brand { height: 50px; margin: 0 -16px; padding: 0 16px; border-bottom: 0; font-size: 16px; }
+  .brand img { width: 30px; height: 30px; }
+  .project-toggle { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 44px; padding: 0 4px; border: 0; border-top: 1px solid var(--line); background: var(--theme-surface,#fff); color: var(--theme-secondary,#344054); font-weight: 700; }
+  .project-toggle span { color: var(--theme-blue-text,var(--blue)); font-size: 12px; }
+  .sidebar:not(.mobile-open) .project-tools,
+  .sidebar:not(.mobile-open) .project-list { display: none; }
+  .project-tools { margin: 4px 0 8px; }
+  .project-tools input, .project-tools button { height: 44px; }
+  .project-list { display: block; max-height: min(46vh, 360px); overflow-y: auto; }
+  .project { min-width: 0; min-height: 52px; }
+  .create-link { width: 100%; min-height: 44px; border-top: 1px solid var(--line); }
+  .topbar { position: static; height: auto; min-height: 48px; padding: 6px 16px; }
+  .topbar > strong, .topbar-actions > span { display: none; }
+  .topbar-actions { width: 100%; justify-content: space-between; gap: 12px; }
+  .topbar-actions .account-entry { min-width: 0; flex-wrap: wrap; gap: 0 8px; }
+  .account-entry button { overflow-wrap: anywhere; text-align: left; }
+  .topbar-actions form { margin-left: auto; flex: none; }
+  .main { min-width: 0; padding: 16px 12px 80px; }
+  .title-row { align-items: flex-start; gap: 8px; }
+  .title-row h1 { width: 100%; font-size: 20px; overflow-wrap: anywhere; }
+  .title-row .primary, .title-row .danger { min-height: 44px; }
+  .title-row .muted, .title-row .command-error { width: 100%; }
+  .breadcrumb { overflow-wrap: anywhere; }
+  .root-issue summary { align-items: flex-start; }
+  .root-issue summary div { gap: 8px; min-width: 0; }
+  .root-issue summary code, .root-body { overflow-wrap: anywhere; }
+  .root-body { padding: 14px; }
+  .parameters > div { max-width: 100%; overflow-x: auto; }
+  .pipeline { padding: 14px 12px; }
+  .flow { min-width: 0; width: max-content; padding-right: 16px; }
+  .stage { flex: 0 0 112px; min-height: 52px; }
+  .parallel { flex: 0 0 115px; }
+  .details nav { overflow-x: auto; white-space: nowrap; padding: 0 4px; }
+  .details nav button { flex: none; min-height: 44px; padding: 10px 12px; }
+  .detail-body { min-width: 0; padding: 14px 12px; overflow-wrap: anywhere; }
+  .detail-body pre, .description pre, .requirement-markdown pre { max-width: 100%; overflow-x: auto; }
+  .detail-body iframe { min-height: 65vh; }
+  .form-actions { flex-wrap: wrap; }
+  .form-actions button { min-height: 44px; }
+  .research-form { padding: 16px; gap: 14px; }
+  .research-form input, .research-form select, .research-form textarea,
+  .settings-section input, .settings-section select { min-height: 44px; font-size: 16px; }
+  .personal-settings { margin: 20px auto; padding: 0 12px 64px; }
+  .personal-settings h1 { flex-wrap: wrap; font-size: 23px; }
+  .settings-panel { padding: 0; }
+  .settings-actions { flex-wrap: wrap; }
+  .settings-actions button { min-height: 44px; }
+  .native-autoresearch-report > header { align-items: flex-start; gap: 8px; flex-wrap: wrap; }
+  .native-autoresearch-report iframe { min-height: 65vh; height: 65vh; }
+  .agent-trace > header { gap: 8px; }
+  .agent-trace input { width: 100%; min-height: 44px; margin-left: 0; font-size: 16px; }
+  .trace-workspace, .trace-workspace.inspecting { display: flex; flex-direction: column; height: auto; }
+  .trace-rows { max-height: 350px; overflow-y: auto; }
+  .trace-row { min-width: 0; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 4px 8px; white-space: normal; min-height: 52px; }
+  .trace-row > strong { max-width: none; min-width: 0; }
+  .trace-inline-input, .trace-inline-output { grid-column: 1 / -1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .trace-row > small { grid-column: 3; grid-row: 1; }
+  .trace-inspector { border-left: 0; border-top: 1px solid var(--theme-line,#eaecf0); max-height: 65vh; }
+  .trace-inspector > nav { overflow-x: auto; white-space: nowrap; }
+  .trace-inspector > nav button { flex: none; min-height: 44px; }
+  .live-log-tools { flex-wrap: wrap; }
+  .live-log-row { grid-template-columns: 66px 42px minmax(0, 1fr); }
+  .live-log-row > span { display: none; }
+  .scroll-actions { right: 12px; bottom: max(12px, env(safe-area-inset-bottom)); }
+}

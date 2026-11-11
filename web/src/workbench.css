@@ -1,0 +1,26 @@
+/* 沿用原 Console 白色侧栏、顶栏、首页输入区和运行详情布局。 */
+.sidebar-heading .brand strong{font-size:17px;white-space:nowrap;letter-spacing:-.45px}
+.brand-symbol>svg{width:32px;height:32px;color:var(--theme-blue-text,#1769e0)}
+.opc-welcome-icon{display:grid;place-items:center;color:var(--theme-blue-text,#1769e0)}
+.opc-welcome-icon svg{width:40px;height:40px}
+.oc-card{padding:22px;background:var(--theme-surface,#fff);border:1px solid var(--line);border-radius:10px;margin-bottom:20px}
+.oc-card h1{font-size:20px;margin:0 0 12px}.oc-card h2{font-size:18px}.oc-card p{line-height:1.7}
+.oc-card label{display:flex;flex-direction:column;gap:7px;margin:16px 0}
+.oc-card label.oc-check{flex-direction:row;align-items:center}
+.oc-card input,.oc-card select,.oc-card textarea{font:inherit;color:var(--theme-text,#172033);background:var(--theme-surface,#fff);border:1px solid var(--line);border-radius:7px;padding:9px 12px}
+.oc-card input[type=checkbox]{padding:0;width:16px;height:16px}
+.oc-card .oc-check small{display:block}.oc-card .primary{background:var(--blue);color:white}
+.oc-card code{font-size:12px;overflow-wrap:anywhere}.oc-card pre{white-space:pre-wrap;overflow-wrap:anywhere}
+.oc-register{display:flex;gap:10px;flex-wrap:wrap}.oc-register input{flex:1;min-width:180px}
+.repository{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding:18px 0;gap:16px}.repository h3{font-size:15px;margin:0 0 5px}.repository p{font-size:12px;color:var(--muted);margin:7px 0 0}.repository button,.model-settings button{border:1px solid var(--line);border-radius:7px;background:var(--theme-surface,#fff);color:var(--theme-secondary,#475467);padding:8px 12px}
+.model-settings form{max-width:640px}.model-settings label input{width:100%}.model-settings [role=alert]{color:var(--red)}.model-settings [role=status]{color:var(--green)}
+.opc-runtime-tabs{display:flex;gap:18px;border-bottom:1px solid var(--line);margin:18px 0 22px}.opc-runtime-tabs button{border:0;border-bottom:2px solid transparent;background:transparent;color:var(--theme-secondary,#475467);padding:10px 4px}.opc-runtime-tabs button.active{border-bottom-color:var(--blue);color:var(--theme-blue-text,var(--blue));font-weight:600}
+.landing-page .chat-composer textarea{width:100%;resize:vertical}.landing-page .chat-composer>div{display:flex;justify-content:space-between;align-items:center}.landing-page .chat-caption{text-align:center;font-size:11px;color:var(--theme-muted,#8793a5)}
+@media(max-width:700px){.sidebar-heading .brand strong{font-size:16px}.repository{align-items:flex-start}.oc-register{flex-direction:column}.opc-runtime-tabs{gap:14px}}
+
+.brand-symbol>svg:not(.brand-expand){transition:opacity 160ms ease-in-out,transform 200ms ease-in-out}
+.sidebar-collapsed .brand:hover .brand-symbol>svg:not(.brand-expand),.sidebar-collapsed .brand:focus-visible .brand-symbol>svg:not(.brand-expand){opacity:0;transform:scale(.82)}
+
+.opc-personal-settings{max-width:1050px}.opc-provider-auth{border-top:1px solid var(--line);padding-top:22px;margin-top:26px}.opc-personal-settings form{margin-bottom:24px}.opc-personal-settings select{width:100%}
+.opc-chat-actions{display:flex;justify-content:flex-end;width:100%;max-width:780px;align-self:center}.opc-chat-actions button,.chat-caption button{border:0;background:transparent;color:var(--theme-muted,#667085);cursor:pointer;font:inherit}.opc-chat-actions button{font-size:12px;padding:5px 8px}.opc-chat-role{display:block;color:var(--theme-muted,#8793a5);font-size:11px;margin-bottom:5px}.chat-user{flex-wrap:wrap}.chat-user .opc-chat-role{width:100%;text-align:right}.chat-assistant .markdown-content table{border-collapse:collapse;max-width:100%}.chat-assistant .markdown-content td,.chat-assistant .markdown-content th{border:1px solid var(--line);padding:6px 10px}.chat-composer .opc-chat-model{max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border:0;padding:2px;background:transparent;color:var(--muted);font-size:11px}
+.landing-page .chat-embedded:not(.is-empty){margin-top:58px;overflow:hidden}.landing-page .chat-embedded:not(.is-empty) .chat-messages{max-width:780px;min-height:120px;flex:1;overflow-y:auto}.landing-page .chat-embedded:not(.is-empty) .chat-footer{flex-shrink:0;padding-bottom:12px}
