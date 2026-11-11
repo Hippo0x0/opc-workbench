@@ -18,3 +18,7 @@
 首页对话由 `src/chat.ts` 管理，复用同一 Pi session.jsonl 保持上下文。单用户同一会话一次只接受一个回复；第二个发送返回冲突，可显式停止或在结束后继续。消息与失败状态写入 chat/conversation.json；开始新对话前归档旧记录。进程重启时将未完成回复标记中断，不自动重发。`AgentRunInput.onTextDelta` 向页面提供已生成正文；页面轮询当前会话逐步展示，不额外消耗模型请求。
 
 `web/src/PersonalSettings.tsx` 是独立的个人设置页面，负责默认模型、预算与通用 provider API Key 输入。认证写入复用上游 Pi AuthStorage，文件权限 0600；API 和页面不读取、回显凭据值。首页对话在未配置模型时引导该页面。
+
+对话编排由 `src/chat-orchestration.ts` 解析明确的 opc-orchestration 输出块，生成规范化草案。模型上下文包含当前 Agent、Skills 元数据、模板拓扑和上一份草案，内置节点压缩为引用以避免重复提示词。草案生成复用 catalog.validate，不授予 Pi 文件写工具；确认保存复用 catalog.save 与现有模板版本检查，系统模板只复制。草案与来源版本随对话保存，用户可继续对话调整；来源版本变化时拒绝覆盖。
+
+`web/src/ChatTemplateDraft.tsx` 展示可查看的节点、提示词和完整配置，再调用保存接口。`web/src/HomeChat.tsx` 的轨迹面板复用 AgentTrace；Run 和对话的轨迹分页由 `src/trace.ts` 同一函数提供，无外部观测平台依赖。

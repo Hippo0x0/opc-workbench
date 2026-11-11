@@ -65,5 +65,18 @@ test('home chat uses real Pi RPC and carries previous user and assistant message
  const {startServer}=await import('../build/server.js');const app=await startServer({root,port:0,env:service.env});t.after(()=>app.close());
  const waitForReply=async()=>{const deadline=Date.now()+10000;for(;;){const state=await(await fetch(app.url+'/api/workbench/chat')).json();if(!state.busy)return state;if(Date.now()>deadline)throw new Error('Pi chat timeout');await new Promise(resolve=>setTimeout(resolve,25));}};
  for(const text of ['请记住数字42','上一轮是什么数字？']){const response=await fetch(app.url+'/api/workbench/chat/messages',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text})});assert.equal(response.status,202);const state=await waitForReply();assert.equal(state.messages.at(-1).status,'completed');}
- const state=await waitForReply();assert.equal(state.messages.length,4);assert.equal(state.messages.at(-1).text,'上一轮的数字是42。');assert.equal(service.requests(),2);
+ const state=await waitForReply();assert.equal(state.messages.length,4);assert.equal(state.messages.at(-1).text,'上一轮的数字是42。');assert.equal(service.requests(),2);const trace=await(await fetch(app.url+`/api/workbench/chat/trace?conversationId=${state.id}&limit=100`)).json();assert.ok(trace.items.some(item=>item.kind==='input'));assert.ok(trace.items.some(item=>item.kind==='model_start'));assert.ok(trace.items.some(item=>item.kind==='assistant'&&item.tokens>0));
+});
+test('real Pi chat produces and revises validated orchestration drafts without writing templates itself',async t=>{
+ const root=temp(t);let sourceId;
+ const nodes=[{id:'review',agentId:'opc-codebase-agent'},{id:'approval',agentId:'system-approval'},{id:'export',agentId:'system-export'}];
+ const service=await fixture(t,root,(body,count)=>{
+  assert.ok(JSON.stringify(body.messages).includes('opc-orchestration'));
+  assert.ok(body.tools.every(tool=>['read','grep','find','ls'].includes(tool.function.name)));
+  return {content:'请查看草案。\n```opc-orchestration\n'+JSON.stringify({operation:count===1?'create':'update',...(count===1?{}:{sourceTemplateId:sourceId}),template:{name:count===1?'对话代码审查':'调整后的代码审查',nodes}})+'\n```'};
+ });
+ const {saveSettings}=await import('../src/settings.ts');saveSettings(root,{model:'fixture/test'});const {startServer}=await import('../build/server.js');const app=await startServer({root,port:0,env:service.env});t.after(()=>app.close());const api=app.url+'/api/workbench';
+ async function ask(text){assert.equal((await fetch(api+'/chat/messages',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text})})).status,202);const deadline=Date.now()+10000;for(;;){const state=await(await fetch(api+'/chat')).json();if(!state.busy)return state.messages.at(-1);if(Date.now()>deadline)throw new Error('Pi composition timeout');await new Promise(resolve=>setTimeout(resolve,25));}}
+ async function save(message){const response=await fetch(api+'/chat/orchestration',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({messageId:message.id,hash:message.draft.hash})});assert.equal(response.status,200);return (await response.json()).template;}
+ const first=await ask('创建代码审查编排');assert.ok(first.draft);assert.equal((await(await fetch(api+'/orchestration/catalog')).json()).templates.length,9);const saved=await save(first);sourceId=saved.id;const next=await ask('修改刚保存的编排名称');assert.equal(next.draft.operation,'update');const updated=await save(next);assert.equal(updated.id,sourceId);assert.equal(updated.version,2);assert.equal(updated.name,'调整后的代码审查');assert.equal(service.requests(),2);
 });

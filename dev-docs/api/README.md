@@ -8,6 +8,8 @@
 | GET / PUT | `/settings` | 读取/保存默认 model、agentMinutes、runWallTimeMinutes；不返回密钥 |
 | GET | `/chat` | 当前首页会话、messages、busy 和默认 model |
 | POST | `/chat/messages` | text；启动真实 Pi 回复，202 返回当前会话；忙时 409 |
+| GET | `/chat/trace` | conversationId 必须等于当前对话；limit、after/before 分页；返回 items、cursor、hasMoreBefore |
+| POST | `/chat/orchestration` | messageId、hash；保存已展示的编排草案，返回 chat、template；忙时 409 |
 | POST | `/chat/stop` | 空 JSON；停止当前回复并保留已显示内容 |
 | POST | `/chat/new` | 空 JSON；新建会话并保留旧记录；忙时 409 |
 | PUT | `/models/auth` | provider、apiKey；通过 Pi AuthStorage 保存，返回 ok/provider，不回显密钥 |
@@ -33,3 +35,7 @@
 Run 状态为 RUNNING、PAUSED、BLOCKED、REVIEW_REQUIRED、COMPLETED、CANCELLED。取消保留证据，可由用户显式恢复；完成态不能继续改写流水线。
 
 首页对话与 Run 生命周期独立，共用默认模型和单次 Agent 调用时限。会话消息包含 id、role、text、at、status 和可选 error；status 为 completed、streaming、failed 或 cancelled。GET 读取进行中的文本，供页面逐步显示；POST 不接受客户端提供会话文件路径或模型密钥。模型为空时拒绝发送并提示个人设置，不写入失败的用户消息。个人设置页面路径为 `/account/`；模型与认证、预算在该独立页面管理。
+
+助手消息可包含 draft 或 draftError。draft 包含 operation（create/update）、完整 template、hash、可选 sourceTemplateId/sourceTemplateName/sourceVersion，以及保存后的 savedTemplate（id/version）。专用模型输出块由服务端解析并复用 catalog.validate 校验；不自动写入模板。保存只接受当前完成消息的 id 与已展示的 hash，拒绝材料变化和过期来源版本；重复保存同一草案不创建第二份模板。系统模板的修改转换为创建副本。首页普通回复仍为 Markdown。
+
+Run 节点 trace 与首页 chat trace 共用 src/trace.ts 的 readTracePage，保持原文件事件 seq 与分页语义。chat trace 只读取当前对话目录，旧页面请求其它 conversationId 返回 404；Run trace 仍先校验节点属于该 Run。轨迹不携带模型认证字段。

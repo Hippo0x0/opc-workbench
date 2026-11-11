@@ -7,7 +7,7 @@ import { createOrchestrationRuntime } from "./orchestration-runtime.ts";
 import { createRuntimeManagement } from "./runtime-management.ts";
 import { readUserSettings, saveSettings } from "./settings.ts";
 import { modelCatalog, saveProviderAuth } from "./models.ts";
-import { createResearchTextRedactor } from "./trace.ts";
+import { createResearchTextRedactor, readTracePage } from "./trace.ts";
 import { object, textField } from "./orchestration-catalog.ts";
 import type { AgentRunInput } from "./agent.ts";
 class HttpError extends Error {readonly status:number;constructor(status:number,message:string){super(message);this.status=status;}}
@@ -38,6 +38,11 @@ export async function startServer(options:{root:string;port?:number;runAgent?:(i
   if(route===`${api}/health`&&method==="GET"){json(res,{ok:true,product:"opc-workbench"});return;}
   if(route===`${api}/settings`){if(method==="GET")json(res,readUserSettings(options.root));else if(method==="PUT")json(res,saveSettings(options.root,await body(req)));else throw new HttpError(405,"方法不支持");return;}
   if(route===`${api}/chat`&&method==="GET"){json(res,chat.get());return;}
+  if(route===`${api}/chat/trace`&&method==="GET"){
+   const id=chat.get().id;if(url.searchParams.get("conversationId")!==id)throw new HttpError(404,"对话不存在或已切换");
+   json(res,readTracePage(path.join(options.root,"chat",id),"chat",url.searchParams));return;
+  }
+  if(route===`${api}/chat/orchestration`&&method==="POST"){const value=await body(req);if(chat.get().busy)throw new HttpError(409,"请先等待当前回复完成");json(res,chat.saveDraft(value));return;}
   if(route===`${api}/chat/messages`&&method==="POST"){const value=await body(req);if(chat.get().busy)throw new HttpError(409,"正在回复，请先停止当前回复");json(res,chat.send(value),202);return;}
   if(route===`${api}/chat/stop`&&method==="POST"){await body(req);json(res,chat.stop());return;}
   if(route===`${api}/chat/new`&&method==="POST"){await body(req);if(chat.get().busy)throw new HttpError(409,"请先停止当前回复");json(res,chat.reset());return;}
@@ -72,14 +77,7 @@ export async function startServer(options:{root:string;port?:number;runAgent?:(i
    if(tail==="trace"&&method==="GET"){
     const stageId=url.searchParams.get("stageId");
     if(!run.frozen.template.nodes.some(node=>node.id===stageId))throw new HttpError(404,"节点不存在");
-    const file=path.join(directory,"stage-trace.jsonl"),lines=fs.existsSync(file)?fs.readFileSync(file,"utf8").split("\n").filter(Boolean):[];
-    const entries:Record<string,unknown>[]=[];
-    lines.forEach((line,i)=>{try{const event:unknown=JSON.parse(line);if(event&&typeof event==="object"&&!Array.isArray(event)&&(event as Record<string,unknown>).stageId===stageId)entries.push({...event,seq:i+1});}catch{/* 保留原文件供诊断 */}});
-    const integer=(name:string,fallback:number)=>{const raw=url.searchParams.get(name);const value=raw===null?fallback:Number(raw);if(!Number.isSafeInteger(value)||value<0)throw new HttpError(400,"轨迹分页参数无效");return value;};
-    const after=integer("after",0),before=integer("before",Number.MAX_SAFE_INTEGER),limit=Math.min(200,Math.max(1,integer("limit",100)));
-    const candidates=entries.filter(event=>Number(event.seq)>after&&Number(event.seq)<before);
-    const items=url.searchParams.has("after")?candidates.slice(0,limit):candidates.slice(-limit);
-    json(res,{items,cursor:items.at(-1)?.seq??after,hasMoreBefore:items.length>0&&entries.some(event=>Number(event.seq)<Number(items[0]!.seq))});return;
+    json(res,readTracePage(directory,stageId!,url.searchParams));return;
    }
   }
   if(route.startsWith("/api/"))throw new HttpError(404,"接口不存在");

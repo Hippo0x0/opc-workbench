@@ -141,3 +141,15 @@ export function writeStageToolEvidence(directory: string, stageId: string): stri
   fs.writeFileSync(file,JSON.stringify({stageId,source,malformedLines,events},null,2)+"\n",{mode:0o600});
   return file;
 }
+
+/** 按原文件行号分页，同一个模型/工具事件保持稳定 seq。 */
+export function readTracePage(directory:string,stageId:string,params:URLSearchParams){
+ const file=path.join(directory,"stage-trace.jsonl"),lines=fs.existsSync(file)?fs.readFileSync(file,"utf8").split("\n").filter(Boolean):[];
+ const entries:Array<Record<string,unknown>>=[];
+ lines.forEach((line,index)=>{try{const event=object(JSON.parse(line));if(event.stageId===stageId)entries.push({...event,seq:index+1});}catch{/* 原文件保留用于诊断，无法解析的行不参与展示。 */}});
+ const integer=(name:string,fallback:number)=>{const raw=params.get(name),value=raw===null?fallback:Number(raw);if(!Number.isSafeInteger(value)||value<0)throw new Error("轨迹分页参数无效");return value;};
+ const after=integer("after",0),before=integer("before",Number.MAX_SAFE_INTEGER),limit=Math.min(200,Math.max(1,integer("limit",100)));
+ const candidates=entries.filter(event=>Number(event.seq)>after&&Number(event.seq)<before);
+ const items=params.has("after")?candidates.slice(0,limit):candidates.slice(-limit);
+ return {items,cursor:items.at(-1)?.seq??after,hasMoreBefore:items.length>0&&entries.some(event=>Number(event.seq)<Number(items[0]!.seq))};
+}
